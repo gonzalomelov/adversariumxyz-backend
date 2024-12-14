@@ -1,6 +1,7 @@
 from flask import Flask, request, Response, stream_with_context, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
+import datetime
 
 from agent.initialize_agent import initialize_agent
 from agent.run_agent import run_agent
@@ -102,6 +103,20 @@ def get_conversation(conversation_id):
         app.logger.error(f"Error fetching conversation {conversation_id}: {str(e)}")
         print(f"Full error details: {str(e)}")
         return jsonify({'error': 'An unexpected error occurred'}), 500
+
+@app.route("/health", methods=['GET'])
+def health():
+    try:
+        return jsonify({
+            'status': 'healthy',
+            'timestamp': datetime.datetime.utcnow().isoformat()
+        }), 200
+    except Exception as e:
+        app.logger.error(f"Health check failed: {str(e)}")
+        return jsonify({
+            'status': 'unhealthy',
+            'error': str(e)
+        }), 500
 
 if __name__ == "__main__":
     app.run()
