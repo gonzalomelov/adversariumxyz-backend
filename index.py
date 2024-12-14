@@ -62,6 +62,47 @@ def nfts():
         app.logger.error(f"Unexpected error in nfts endpoint: {str(e)}")
         return jsonify({'error': 'An unexpected error occurred'}), 500
 
+@app.route("/api/conversations/<conversation_id>", methods=['GET'])
+def get_conversation(conversation_id):
+    try:
+        # Access the memory directly from the agent_executor
+        memory = app.agent_executor.checkpointer
+        print(f"Memory object type: {type(memory)}")
+        
+        # Get the conversation history for the specific thread
+        history = memory.get({"configurable": {"thread_id": conversation_id}})
+        print(f"Raw history: {history}")
+        
+        if not history:
+            print(f"No history found for conversation {conversation_id}")
+            return jsonify({'messages': []}), 200
+            
+        # Extract messages from the channel_values
+        messages = []
+        if 'channel_values' in history and 'messages' in history['channel_values']:
+            message_list = history['channel_values']['messages']
+            for msg in message_list:
+                print(f"Processing message: {msg}")
+                
+                if hasattr(msg, 'type') and msg.type == 'human':
+                    messages.append({
+                        "role": "human",
+                        "content": msg.content
+                    })
+                elif hasattr(msg, 'type') and msg.type == 'ai':
+                    messages.append({
+                        "role": "agent",
+                        "content": msg.content
+                    })
+                # You might need to add additional conditions for tool messages
+        
+        print(f"Final messages array: {messages}")
+        return jsonify({'messages': messages}), 200
+    except Exception as e:
+        app.logger.error(f"Error fetching conversation {conversation_id}: {str(e)}")
+        print(f"Full error details: {str(e)}")
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+
 if __name__ == "__main__":
     app.run()
     
