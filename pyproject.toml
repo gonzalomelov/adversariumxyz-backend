@@ -6,7 +6,7 @@ authors = ["Your Name <first.last@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.11"
 flask = "^3.0.3"
 langchain = "^0.3.6"
 langchain-openai = "^0.2.5"
@@ -17,6 +17,7 @@ python-dotenv = "^1.0.1"
 cdp-langchain = "^0.0.4"
 cdp-agentkit-core = "^0.0.3"
 flask-cors = "^5.0.0"
+gunicorn = "^21.2.0"
 
 
 [build-system]
