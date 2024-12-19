@@ -1,3 +1,7 @@
+# adversarium.xyz
+
+Demo https://www.youtube.com/watch?v=J6_YBLm3bs4
+
 # Onchain Agent Backend Demo
 
 ![Token-creation](https://github.com/user-attachments/assets/016c26cd-c599-4f7c-bafd-c8090069b53e)
